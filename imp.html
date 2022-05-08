@@ -1,0 +1,479 @@
+﻿<!doctype html><html><title>CFIT Invisible Media Player</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="preload" href="单曲循环.gif">
+<link rel="preload" href="暂停.gif">
+<link rel="preload" href="启动.gif">
+<link rel="preload" href="下一个.gif">
+<link rel="preload" href="下载.gif">
+<link rel="preload" href="音量.gif">
+<link rel="preload" href="关闭.gif">
+<link rel="stylesheet" href="try.css">
+<script src="std.js"></script>
+<script src="jquery.js"></script>
+<script src="anime.min.js"></script>
+
+<style type="text/css">
+body {background:url(impbgpc.jpg);
+background-position:center top;
+height:calc(100vh);
+   background-repeat:no-repeat;
+   background-attachment: fixed;
+   background-size:cover;}
+.cfitsd{box-shadow:4px 4px 10px #909090;}
+.cfitsj{box-shadow:4px 4px 10px #909090;}
+#xpfsgj{position:absolute;left:170px;top:5px;font-family:Algerian;font-size:16pt;color: white;}
+</style><meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0">
+<script src="clipboard.js"></script><script src="count.php"></script>
+<div style="align-items: start"  style="position: absolute;z-index: 16384">
+			<div class="hamburger hamburger--arrowturn" style="position: absolute;z-index: 16384"  onclick="clk()" id="mobile_menu_icon">
+				<div class="hamburger-box">
+				<div class="hamburger-inner"></div>
+				</div>
+			</div>
+		</div>
+<div class="mobile_menu" style="position:absolute ;z-index: 8192;left:-500px;width:480px;height:100%;top:0px;background: rgba(0,0,0,0.7)" id="mobile_menu">
+<b><label style="position: absolute ;top:10px;right:50px;font-size: x-large ;font-family: 微软雅黑;color: white;opacity:0.8" id="tools">设置</label></b>
+<!--菜单栏-->
+<!--cd1-->
+<div name="hr" style="position: absolute;top:80px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+<div id="cd1" name="cd" style="width:100%;height:50px;background: rgba(255,255,255,0.1)">
+<span style="position:absolute;left:145px;top:10px;font-size: x-large;font-family: 微软雅黑;color:white"><img style="position:absolute;left:-35px;height:30px;width:30px;" src="icons/reload.svg"><b><label>重新启动</label></b></span></div>
+<div name="hr" style="position: absolute;top:130px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+<!--cd2-->
+<div name="hr" style="position: absolute;top:135px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+<div id="cd2" name="cd" style="width:100%;height:50px;background: rgba(255,255,255,0.1)">
+<span style="position:absolute;left:145px;top:10px;font-size: x-large;font-family: 微软雅黑;color:white"><img style="position:absolute;left:-35px;height:30px;width:30px;" src="icons/info.svg"><b><label>关于</label></b></span></div>
+<div name="hr" style="position: absolute;top:185px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+<!--cd3-->
+<div name="hr" style="position: absolute;top:135px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+<div id="cd3" name="cd" style="width:100%;height:50px;background: rgba(255,255,255,0.1)">
+<span style="position:absolute;left:145px;top:10px;font-size: x-large;font-family: 微软雅黑;color:white"><img style="position:absolute;left:-35px;height:30px;width:30px;" src="icons/settings.svg"><b><label>经典版</label></b></span></div>
+<div name="hr" style="position: absolute;top:185px;width:100%;height:1px;background: rgba(255,255,255,0.6);z-index:4096;"></div>
+</div>
+<div style="position:absolute;left:-320px;width:320px;height:420px;background:rgba(0,0,0,0.6);z-index:8191;opacity:0;" id="about">
+<b><label style="position:absolute;height:180px;top:10px;left:5px;width:310px;font-family: 微软雅黑;color:white;font-size:16pt;"><span style="color:#ffffff" id="cfitimp">CFIT Invisible Media Player   (CFITIMP)</span>，起源于2021年5月28日。这是一个不一般的音乐播放器，它拥有上千首歌曲数据库，既可在一个个随机数字的“指使”下随机播放音乐，又可在你点击循环播放按钮后循环单首音乐；既可在你点击“音乐”二字时复制当前音乐信息，又可在你点击下载按钮后下载音乐。优美的古典音乐，中间偶尔来点现代乐曲，为你的工作生活增添光彩。
+<br><a href="#" style="text-decoration: none;"><span style="color:#ffffff;text-decoration: none ;" id="lzgd">了解更多»</span></a></label></b>
+</div>
+<!-- -300px -> 420px-->
+<!--菜单栏控制-->	
+<script type="text/javascript">
+var menu=document.getElementById('mobile_menu');
+var p1=0,q1=0;
+var l=document.getElementsByName('cd');
+var h=document.getElementsByName('hr');
+var flag=0;
+function tx(id,height,top)
+{
+//<!--综合总体控制-->
+var to=top+5*(id-1)+height*id;
+h[id*2].style.top=to+"px";
+h[id*2+1].style.top=to+height+"px";
+l[id].style.top=to+"px";
+document.getElementById('about').style.top=document.getElementById('cd2').style.top;
+l[id].style.height=height+"px";
+l[id].style.position='absolute';
+l[id].onmouseout=function(){
+	l[id].style.background="rgba(255,255,255,0.1)";
+	///flag=1;
+	console.log(l.length);
+	}
+	l[id].onmouseover=function(){
+	l[id].style.background="rgba(255,255,255,0.3)";
+	console.log(l.length);
+	}	
+	l[id].onmouseend=function(){
+	l[id].style.background="rgba(255,255,255,0.1)";
+	console.log(l.length);//console.log('cd4'+i.toString());
+	//flag=1;
+	}
+	l[id].ontouchend=function(){
+	l[id].style.background="rgba(255,255,255,0.1)";
+	console.log(l.length);
+}
+}
+
+for(var i=0;i<l.length;i++)
+{
+tx(i,50,80);
+}
+var ljgd=document.getElementById('lzgd');
+ljgd.onmouseover=function()
+{
+let cds=anime({targets:'#lzgd',color:{value:['#ffffff',"#0066ff"]},duration:1500});
+//ljgd.style.color="#0066ff";
+}
+ljgd.onmouseout=function()
+{
+let cds=anime({targets:'#lzgd',color:{value:['#0066ff',"#ffffff"]},duration:1500});
+//ljgd.style.color="#ffffff";
+}
+var cfitimp=document.getElementById('cfitimp');
+cfitimp.onmouseover=function()
+{
+let cds=anime({targets:'#cfitimp',color:{value:['#ffffff',"#0099ff"]},duration:1500});
+//ljgd.style.color="#0066ff";
+}
+cfitimp.onmouseout=function()
+{
+let cds=anime({targets:'#cfitimp',color:{value:['#0099ff',"#ffffff"]},duration:1500});
+//ljgd.style.color="#ffffff";
+}
+//<!--个性化控制-->
+/*菜单1*/
+var cd1=document.getElementById('cd1');
+cd1.onclick=function(){
+document.getElementById('au').volume=0.8;
+document.getElementById('ra').value=80;
+$.get("rndmusic.php",function (data) { 
+once=1;
+data=JSON.parse(data);
+document.getElementById('index').innerHTML="&nbsp;";//"音乐 [ "+data.index+" ]";
+document.getElementById('status').innerHTML ="&nbsp;";
+document.getElementById('au').src="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url";
+title=data.title;
+document.getElementById('qdzt').click();
+document.getElementById('qdzt').click();
+document.getElementById('dqxh').src="随机播放.gif";
+});
+/*菜单2*/
+}
+var cd2=document.getElementById('cd2');
+cd2.onclick=function(){
+let cds=anime({targets:'#about',opacity:[0,1],left:[250,395],duration:500});
+}
+var cd3=document.getElementById('cd3');
+cd3.onclick=function(){
+location.href="https://cfitcorporation.github.io/CFIT-Invisible-Media-Player/";
+}	
+	</script>
+
+		<div id="left-sidebar"></div>
+	<header></header>
+<!--播放器主页-->
+<div style="position:absolute;z-index:1024;left:0px;width:100%;height:190px;top:40%;background:rgba(0, 0, 0, 0.4);" class="cfitsd" id="cfit">
+
+<div style="position:absolute;z-index:2048;left:0px;height:32px;top:0px;width:100%;background:rgba(255,255,255,0.6);">
+<b>
+<label style="color: black;font-family:微软雅黑;font-size:x-large;opacity:0.6">&nbsp;&nbsp;CFIT Invisible Media Player Controller</label>
+<!--label style="position:absolute; font-size:xx-large;left:5px;top:calc(20%);color:#ecb237" id="xpfsgd">☞</label-->
+</b>
+</div>
+<center>
+<br><br>
+<b>
+<label style="position:absolute;right:6%;top:20%;color:white;font-size:16pt;opacity:0.7">网络状态 - <span style="color:lime;" id="iscon">正常</span></label>
+<label style="color: white;opacity:0.7;font-family:微软雅黑;font-size: 22pt" id="index">&nbsp;</label><br>
+<label style="color: white;opacity:0.7;font-family:微软雅黑;font-size: 16pt" id="status">&nbsp;</label></b>
+<br><br></center>
+<img src="随机播放.gif" height="48" width="48" style="position:absolute;left:25%;" id="dqxh">
+<a href="" target="_blank" download id="dl"></a>
+<img src="下载.gif" height="40" width="42" style="position:absolute;left:35%;"  id="xz">
+<img src="启动.gif" height="40" width="42" style="position:absolute;left:45%;" id="qdzt">
+<img src="下一个.gif" height="40" width="42" style="position:absolute;left:55%;" id="xyg">
+<img src="关闭.gif" height="40" width="42" style="position:absolute;left:65%;" id="gb">
+<img src="音量.gif" height="45" width="47" style="position:absolute;left:74%;z-index:4096" id="yl">
+<div id="rang" style="position:absolute;left:calc(74% + 35px);top:73%;height:25px;opacity:0;background:rgba(255,255,255,0.8);z-index:4096"><input type="range" max="100" min="0" id="ra" style="width:85px;height:20px;"></div>
+<!--label id="xpfsgj"></label-->
+<br>
+<!--img src="#" class="cfitsj" style="height:70px;width:70px;position:absolute;left:75px;top:5px;"-->
+<!--img src="./p.gif" style="position:absolute;height:40px;width:35px;bottom:5px;left:calc(45%)" id="ctrl"-->
+<!--a href="http://music.163.com/song/media/outer/url?id=17269801.mp3" download="Creative Insight (Album Version).mp3"-->
+<!--img src="./d.gif" style="position:absolute;height:40px;width:40px;bottom:5px;left:calc(75%)"></a-->
+</div>
+<!--a href="http://music.163.com/song/media/outer/url?id=17269801.mp3" target="_blank">1</a-->
+<div id="cosu" style="position:absolute;z-index:4096;top:40%;height:60px;width:150px;left:43%;opacity:0;background:rgba(0,0,0,0.6)">
+<center><b><label style="position:absolute;left:22px;top:10px;color:white;opacity:0.7;font-size:20pt;font-family: 微软雅黑">复制成功</label></b></center>
+</div>
+<audio src="http://music.163.com/song/media/outer/url?id=17269801.mp3" id="au">
+</audio>
+<script type="text/javascript">
+var k123;
+k123=0;
+//document.getElementById('clip').innerHTML="1";
+window.addEventListener('online',function(){
+document.getElementById('iscon').innerHTML ="正常";
+document.getElementById('iscon').style.color="lime";
+});
+window.addEventListener('offline',function(){
+document.getElementById('iscon').innerHTML ="错误";
+document.getElementById('iscon').style.color="red";
+});
+document.getElementById('au').volume=0.8;
+document.getElementById('ra').value=80;
+var once=0;
+var top1=document.getElementById('cfit').style.top;
+var title;function rndmusic(){
+$.get("rndmusic.php",function (data) { 
+data=JSON.parse(data);
+document.getElementById('index').innerHTML="音乐 [ "+data.index+" ]";
+document.getElementById('au').src=data.url;
+title=data.title;
+document.getElementById('au').play();
+});
+}
+$.get("rndmusic.php",function (data) { 
+once=1;
+data=JSON.parse(data);
+document.getElementById('index').innerHTML="&nbsp;";//"音乐 [ "+data.index+" ]";
+document.getElementById('status').innerHTML ="&nbsp;";
+document.getElementById('au').src="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url";
+title=data.title;
+document.getElementById('qdzt').click();
+document.getElementById('qdzt').click();
+document.getElementById('qdzt').click();
+});
+
+var aud=document.getElementById('au');
+window.onload =function(){
+aud.onloadstart=function(){
+if(document.getElementById('au').src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+{
+
+document.getElementById('status').innerHTML = "播放状态 - 正在连接";
+setTimeout(function(){document.getElementById('status').innerHTML = "播放状态 - 播放";},200);
+}
+}
+}
+aud.onplay=function(){
+if(document.getElementById('au').src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+{
+once=once+1;
+if(once==2){
+document.getElementById('au').volume=0.1;
+document.getElementById('ra').value=10;
+}document.getElementById('status').innerHTML = "播放状态 - 播放";
+document.getElementById('qdzt').src="暂停.gif";
+}
+}
+aud.onpause=function(){
+if(document.getElementById('au').src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+{
+
+document.getElementById('status').innerHTML = "播放状态 - 暂停";
+document.getElementById('qdzt').src="启动.gif";
+}
+}
+aud.onerror=function(){
+document.getElementById('status').innerHTML = "播放状态 - 准备就绪";
+rndmusic();
+}
+aud.onended=function(){
+var dqzh=document.getElementById('dqxh');
+k=dqzh.src;
+if(k.indexOf(encodeURI("随"))>-1){
+rndmusic();
+}
+else
+{
+aud.load();
+aud.play();
+}
+}
+var qdzt=document.getElementById('qdzt');
+qdzt.onclick =function()
+{
+k=qdzt.src;
+if(k.indexOf(encodeURI("启动"))>-1){
+qdzt.src="./暂停.gif";
+aud.play();
+
+}
+if(k.indexOf(encodeURI("暂停"))>-1){
+qdzt.src="./启动.gif";
+aud.pause();
+}
+
+}
+var dqzh=document.getElementById('dqxh');
+dqzh.onclick =function()
+{
+if(once>1){
+k=dqzh.src;
+if(document.getElementById('au').src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+{
+if(k.indexOf(encodeURI("单"))>-1){
+dqzh.src="./随机播放.gif";
+
+}
+if(k.indexOf(encodeURI("随"))>-1){
+dqzh.src="./单曲循环.gif";
+}
+}
+}
+}
+var xyg=document.getElementById('xyg');
+xyg.onclick =function(){
+if(once>1){
+rndmusic();
+}
+}
+var xz=document.getElementById('xz');
+xz.onclick =function(){
+if(once>1){
+document.getElementById('dl').href=aud.src;
+document.getElementById('dl').download=title+".mp3";
+document.getElementById('dl').click();
+}
+}
+var gb=document.getElementById('gb');
+gb.onclick =function(){
+top1=document.getElementById('cfit').style.top;
+let ani=anime({targets:"#cfit",opacity:[1,0],duration:3000,top:[top1,0]});
+}
+document.onclick =function(){
+console.log(Math.abs(parseInt(document.getElementById('cfit').style.top)-parseInt(top1)));
+if(Math.abs(parseInt(document.getElementById('cfit').style.top)-parseInt(top1))>25){
+let anim=anime({targets:"#cfit",opacity:[0,1],duration:3000,top:[0,top1]});
+}
+//top1=document.getElementById('cfit').style.top;
+}
+var yl=document.getElementById('yl');
+yl.onmouseover=function(){
+if(once>1){
+rang.style.opacity=1;
+}
+}
+yl.onmouseout=function(){
+rang.style.opacity=0;
+
+}
+var rang=document.getElementById('rang');
+rang.onmouseover=function(){
+if(once>1){
+rang.style.opacity=1;
+}
+}
+rang.onmouseout=function(){
+rang.style.opacity=0;
+
+}
+rang.onmousemove=function(){
+console.log('ok');
+aud.volume=ra.value/100;
+}
+rang.ontouchmove=function(){
+console.log('ok');
+aud.volume=ra.value/100;
+}
+ra.onclick=function(){
+console.log('ok');
+aud.volume=ra.value/100;
+}
+new ClipboardJS('#index', {
+    text: function(trigger) {  
+     if(aud.src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+    {
+    let a=anime({targets:"#cosu",opacity:[0,1],duration:1500,complete:hid}); 
+ 
+        return title+"\n"+aud.src;
+        }
+      
+    }
+});
+new ClipboardJS('#status', {
+    text: function(trigger) {
+       if(aud.src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+    {
+    let a=anime({targets:"#cosu",opacity:[0,1],duration:1500,complete:hid}); 
+        return title+"\n"+aud.src;
+      }
+    }
+});
+new ClipboardJS('#iscon', {
+    text: function(trigger) {
+       if(aud.src!="http://antiserver.kuwo.cn/anti.s?useless=/resource/&format=mp3&rid=MUSIC_4167501&response=res&type=convert_url")
+    {
+    let a=anime({targets:"#cosu",opacity:[0,1],duration:1500,complete:hid}); 
+        return title+"\n"+aud.src;
+     } 
+    }
+});
+function hid(){
+let a=anime({targets:"#cosu",opacity:[1,0],duration:1500}); 
+}
+	
+	var mi=document.getElementById("mobile_menu_icon");
+function clk(){
+
+	k123=k123+1;
+	console.log(k123);
+	if(k123%2==1){
+	let fit1=anime({targets:"#mobile_menu",left:[-500,-90],duration:1000});
+	let cit1=anime({targets:"#tools",opacity:[0,1],delay:500,duration:2000});
+
+	}
+	if(k123%2==0){
+	let fit2=anime({targets:"#mobile_menu",left:[-90,-500],duration:1000});
+	let cit2=anime({targets:"#tools",opacity:[1,0],duration:2000});
+	if(document.getElementById('about').style.opacity>0){
+	let cds3=anime({targets:'#about',opacity:[1,0],left:[420,-300],duration:500});
+	}
+	}
+	}
+
+ //aud.playState=false;
+/*var p=0,q=0;
+setInterval(function(){
+/*
+p=document.getElementById('au').currentTime;
+if(p-q>0)
+{
+q=p;
+}
+else
+if(p==q && p>0)
+{
+document.getElementById('status').innerHTML = "播放状态 - 暂停";
+}
+else
+if(p==0)
+{
+//document.getElementById('status').innerHTML = "播放状态 - 准备就绪";
+}
+else
+{
+document.getElementById('status').innerHTML = "播放状态 - 播放";
+}
+console.log(p);
+//paused or gua
+/*$.get("rndmusic.php",function (data) { 
+data=JSON.parse(data);
+document.getElementById('index').innerHTML="音乐 [ "+data.index+" ]";
+document.getElementById('au').src=data.url;
+document.getElementById('au').play();
+}); */
+/*},500);*/
+
+/**
+$(document).mousemove(function(e){
+ var x=e.pageX;var y=e.pageY;var x0=$("#cfit").offset().left+$("#cfit").width();var y0=$("#cfit").offset().top;var y1=$("#cfit").height();/*console.log(e.pageY,$("#cfit").offset().top+$("#cfit").height());*//*console.log(e.pageX,$("#cfit").offset().left+$("#cfit").width());*//*console.log($("#cfit").offset().left);*/
+/*** var flag=0;
+ if(x>=$("#cfit").offset().left+$("#cfit").width()-40 && x<=x0 && y>=y0 && y<=y0+y1){
+ flag=1;/*console.log("true");*/
+ /***if(x0<$("#cfit").width()-75)
+ {/*let cit=anime({targets:"#cfit",delay:100,left:[-95%,-0%],duration:3000});*/
+ /***document.getElementById("xpfsgd").innerHTML="☜";
+ document.getElementById("xpfsgd").style.left="3px";}}});
+ $(document).mousedown(function(e){
+  /*console.log(e.pageX,$("#cfit").offset().left+$("#cfit").width()-20);*/
+  /***if(e.pageX>=$("#cfit").offset().left+$("#cfit").width()-40 && $("#cfit").offset().left>=-70)
+  {/*let fit=anime({targets:"#cfit",delay:100,left:[-0%,-95%],duration:3000});*/
+ /*** document.getElementById("xpfsgd").innerHTML="☞";
+  document.getElementById("xpfsgd").style.left="5px";
+  }var x=e.pageX;var y=e.pageY;
+  var x0=$("#cfit").offset().left+$("#cfit").width();
+  var y0=$("#cfit").offset().top;var y1=$("#cfit").height();
+  if(x>=$("#cfit").offset().left+$("#cfit").width()-40 && x<=x0 && y>=y0 && y<=y0+y1){
+  flag=1;/*console.log("true");*/
+/*** * if(x0<$("#cfit").width()-75)
+  {/*let cit=anime({
+  targets:"#cfit",delay:100,left:[-95%,-0%],duration:3000});*/
+ /*** document.getElementById("xpfsgd").innerHTML="☜";
+  document.getElementById("xpfsgd").style.left="3px";
+  }}if(x0>$("#cfit").width()-75)
+  {if(x>=0 && x<=x0 && y>=y0 && y<=y0+y1){ }
+  else{/*let cit=anime({targets:"#cfit",delay:100,left:[-0%,-95%],duration:3000});*/
+ /*** document.getElementById("xpfsgd").innerHTML="☞";
+  document.getElementById("xpfsgd").style.left="5px";}}});*/
+  </script>
+</html>
