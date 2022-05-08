@@ -1,0 +1,16 @@
+﻿.hamburger{font:inherit;display:inline-block;overflow:visible;padding:0;margin:auto 0;cursor:pointer;transition-timing-function:linear;transition-duration:.15s;transition-property:opacity,filter;text-transform:none;color:inherit;border:0;background-color:transparent;height:60px}
+.hamburger.is-active .hamburger-inner,.hamburger.is-active .hamburger-inner:after,.hamburger.is-active .hamburger-inner:before{background-color:#fff}
+.hamburger-box{position:relative;display:inline-block;width:60px;height:40px}
+.hamburger-inner{top:50%;display:block;margin-top:-2px}
+.hamburger-inner,.hamburger-inner:after,.hamburger-inner:before{position:absolute;width:60px;height:6px;transition-timing-function:ease;transition-duration:.15s;transition-property:transform;border-radius:4px;background-color:#fff}
+.hamburger-inner:after,.hamburger-inner:before{display:block;content:""}
+.hamburger-inner:before{top:-8px}
+.hamburger-inner:after{bottom:-8px}
+.hamburger--arrowturn.is-active .hamburger-inner{transform:rotate(720deg)}
+.hamburger--arrowturn.is-active .hamburger-inner:before{transform:rotate(360deg)/*transform:translate3d(18px,0,0) rotate(405deg) scaleX(.5)*/}
+.hamburger--arrowturn.is-active .hamburger-inner:after{transform:rotate(360deg)/*transform:translate3d(18px,0,0) rotate(-405deg) scaleX(.5)*/}
+.hamburger--arrowturn-r.is-active .hamburger-inner{transform:rotate(720deg)}
+.hamburger--arrowturn-r.is-active .hamburger-inner:before{transform:rotate(360deg)/*transform:translate3d(-10px,0,0) rotate(-405deg) scaleX(.10)*/}
+.hamburger--arrowturn-r.is-active .hamburger-inner:after{transform:rotate(360deg)/*transform:translate3d(-10px,0,0) rotate(405deg) scaleX(.10)*/}
+.icon_add_image,.icon_hamburger{display:inline-block;background-size:contain;background-repeat:no-repeat;background-position:50%;width:60px;height:60px}
+.icon_hamburger{background-image:url(icons/settings.svg)}
